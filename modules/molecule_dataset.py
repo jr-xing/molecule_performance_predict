@@ -11,8 +11,8 @@ from .molecule import Molecule
 m0 = Molecule(
         name = 'H2O',
         name_Chinese='水',
-        bone_atoms_list = {'O':['1a']},
-        side_atoms_list = {'H':['1a2']})
+        bone_atoms_dict = {'O':['1a']},
+        leaf_atoms_dict = {'H':['1a2']})
 
 '''
 1. 乙酸乙酯 ethyl_acetate
@@ -31,9 +31,9 @@ m0 = Molecule(
 m1 = Molecule(
         name = 'ethyl_acetate',
         name_Chinese='乙酸乙酯',
-        bone_atoms_list = {'C':['1a','2a','4a','5a'],
+        bone_atoms_dict = {'C':['1a','2a','4a','5a'],
                            'O':['3a','3b']},
-        side_atoms_list = {'H':['1a3','4a2','5a3']},
+        leaf_atoms_dict = {'H':['1a3','4a2','5a3']},
         additional_or_special_bonds_list = [['2a','3b','double']])
 y1 = 5
 '''
@@ -46,9 +46,9 @@ y1 = 5
 m2 = Molecule(
         name = 'oxolane',
         name_Chinese='四氢呋喃',
-        bone_atoms_list={'C':['1a','2a','3a','4a'],
+        bone_atoms_dict={'C':['1a','2a','3a','4a'],
                      'O':['5a']},
-        side_atoms_list={'H':['1a2','2a2','3a2','4a2']},
+        leaf_atoms_dict={'H':['1a2','2a2','3a2','4a2']},
         additional_or_special_bonds_list=[['5a','1a']])
 y2 = 4
 '''
@@ -60,10 +60,10 @@ y2 = 4
 m3 = Molecule(
         name = 'DMF',
         name_Chinese='N,N-二甲基甲酰胺',
-        bone_atoms_list={'C':['1a','3a','3b'],
+        bone_atoms_dict={'C':['1a','3a','3b'],
                      'O':['4a'],
                      'N':['2a']},
-        side_atoms_list={'H':['1a3','3a','3b3']},
+        leaf_atoms_dict={'H':['1a3','3a','3b3']},
         additional_or_special_bonds_list=[['3a','4a','double']])
 y3 = 5
 '''
@@ -75,9 +75,9 @@ y3 = 5
 m4 = Molecule(
         name = 'Propanone',
         name_Chinese='丙酮',
-        bone_atoms_list={'C':['1a','2a','3a'],
+        bone_atoms_dict={'C':['1a','2a','3a'],
                      'O':['3b']},
-        side_atoms_list={'H':['1a3','3a3']},
+        leaf_atoms_dict={'H':['1a3','3a3']},
         additional_or_special_bonds_list=[['2a','3b','double']])
 y4 = 5
 '''
@@ -93,16 +93,16 @@ y4 = 5
 m5_1 = Molecule(
         name = 'Thiophene',
         name_Chinese='噻吩',
-        bone_atoms_list={'C':['1a','2a','3a','4a'],
+        bone_atoms_dict={'C':['1a','2a','3a','4a'],
                      'S':['5a']},
-        side_atoms_list={'H':['1a','2a','3a','4a']},
+        leaf_atoms_dict={'H':['1a','2a','3a','4a']},
         additional_or_special_bonds_list=[['1a','2a','double'],['3a','4a','double'],['5a','1a','single']])
 m5_2 = Molecule(
         name = 'Thiophene',
         name_Chinese='噻吩',
-        bone_atoms_list={'C':['1a','2a','3a','4a'],
+        bone_atoms_dict={'C':['1a','2a','3a','4a'],
                      'S':['5a']},
-        side_atoms_list={'H':['1a','2a','3a','4a']},
+        leaf_atoms_dict={'H':['1a','2a','3a','4a']},
         additional_or_special_bonds_list=[['1a','2a','pi'],
                                           ['2a','3a','pi'],
                                           ['3a','4a','pi'],
@@ -117,9 +117,9 @@ y5 = 4
 m6 = Molecule(
         name = 'Toluenes',
         name_Chinese='甲苯',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'C':['2a']},
-        side_atoms_list={'H':['2a3']})
+        leaf_atoms_dict={'H':['2a3']})
 y6 = 4
 '''
 7. 1,4-二氧六环 dioxane_1_4
@@ -131,9 +131,9 @@ y6 = 4
 m7 = Molecule(
         name = 'dioxane_1_4',
         name_Chinese='1,4-二氧六环',
-        bone_atoms_list={'C':['2a','3a','5a','6a'],
+        bone_atoms_dict={'C':['2a','3a','5a','6a'],
                          'O':['1a','4a']},
-        side_atoms_list={'H':['2a2','3a2','5a2','6a2']},
+        leaf_atoms_dict={'H':['2a2','3a2','5a2','6a2']},
         additional_or_special_bonds_list=[['6a','1a','single']])
 y7 = 2
 '''
@@ -143,8 +143,8 @@ y7 = 2
 m8 = Molecule(
         name = 'Methanol',
         name_Chinese='甲醇',
-        bone_atoms_list={'C':['1a'],'O':['2a']},
-        side_atoms_list={'H':['1a3','2a']})
+        bone_atoms_dict={'C':['1a'],'O':['2a']},
+        leaf_atoms_dict={'H':['1a3','2a']})
 y8 = 5
 '''
 9. 氯苯 PhCl
@@ -153,7 +153,7 @@ y8 = 5
 m9 = Molecule(
         name = 'PhCl',
         name_Chinese='氯苯',
-        bone_atoms_list={'Ph':['1a'], 'Cl': ['2a']})
+        bone_atoms_dict={'Ph':['1a'], 'Cl': ['2a']})
 y9 = 6
 '''
 10. 仲丁醇 sec_butanol
@@ -164,9 +164,9 @@ y9 = 6
 m10 = Molecule(
         name = 'Sec Butanol',
         name_Chinese='仲丁醇',
-        bone_atoms_list={'C':['1a', '2a','3a','4a'],
+        bone_atoms_dict={'C':['1a', '2a','3a','4a'],
                          'O':['4b']},
-        side_atoms_list={'H':['1a3','2a2','3a','4a3','4b']}
+        leaf_atoms_dict={'H':['1a3','2a2','3a','4a3','4b']}
         )
 y10 = 2
 '''            
@@ -178,7 +178,7 @@ y10 = 2
 m11 = Molecule(
         name = 'Benzophenone',
         name_Chinese='二苯甲酮',
-        bone_atoms_list={'Ph':['1a','3a'],
+        bone_atoms_dict={'Ph':['1a','3a'],
                          'C':['2a'],
                          'O':['3b']},
         additional_or_special_bonds_list=[['2a','3b','double']])
@@ -190,9 +190,9 @@ y11 = 4
 m12 = Molecule(
         name = 'Aniline',
         name_Chinese='苯胺',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'N':['2a']},
-        side_atoms_list={'H':['2a2']})
+        leaf_atoms_dict={'H':['2a2']})
 y12 = 7
 '''
 13. 糠醛 furfural
@@ -206,9 +206,9 @@ y12 = 7
 m13_1 = Molecule(
         name = 'furfural',
         name_Chinese='糠醛',
-        bone_atoms_list={'C':['1a', '2a','3a','4a', '5a'],
+        bone_atoms_dict={'C':['1a', '2a','3a','4a', '5a'],
                          'O':['6a','5b']},
-        side_atoms_list={'H':['1a','2a','3a','5a']},
+        leaf_atoms_dict={'H':['1a','2a','3a','5a']},
         additional_or_special_bonds_list=[['1a','2a','double'],
                                           ['3a','4a','double'],
                                           ['5a','6a','double'],
@@ -216,9 +216,9 @@ m13_1 = Molecule(
 m13_2 = Molecule(
         name = 'furfural',
         name_Chinese='糠醛',
-        bone_atoms_list={'C':['1a', '2a','3a','4a', '5a'],
+        bone_atoms_dict={'C':['1a', '2a','3a','4a', '5a'],
                          'O':['6a','5b']},
-        side_atoms_list={'H':['1a','2a','3a','5a']},
+        leaf_atoms_dict={'H':['1a','2a','3a','5a']},
         additional_or_special_bonds_list=[['1a','2a','pi'],
                                           ['2a','3a','pi'],
                                           ['3a','4a','pi'],
@@ -233,10 +233,10 @@ y13 = 98
 m14 = Molecule(
         name = 'Benzyl Chloride',
         name_Chinese='氯化苄',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'C':['2a'],
                          'Cl':['3a']},
-        side_atoms_list={'H':['2a2']})
+        leaf_atoms_dict={'H':['2a2']})
 y14 = 96
 '''
 15. 环己酮 Cyclohexanone
@@ -249,9 +249,9 @@ y14 = 96
 m15 = Molecule(
         name = 'Cyclohexanone',
         name_Chinese='环己酮',
-        bone_atoms_list={'C':['1a', '2a','3a','4a', '5a', '6a'],
+        bone_atoms_dict={'C':['1a', '2a','3a','4a', '5a', '6a'],
                          'O':['7b']},
-        side_atoms_list={'H':['1a2','2a2','3a2','4a2','5a2']},
+        leaf_atoms_dict={'H':['1a2','2a2','3a2','4a2','5a2']},
         additional_or_special_bonds_list=[['6a','1a','single'],
                                           ['6a','7b','double']])
 y15 = 95
@@ -266,10 +266,10 @@ CH   -   CH
 m16_2 = Molecule(
         name = '2-Thenaldehyde',
         name_Chinese='2-噻吩甲醛',
-        bone_atoms_list={'C':['1a','3a','4a','5a','4b','5b'],
+        bone_atoms_dict={'C':['1a','3a','4a','5a','4b','5b'],
                          'S':['2a'],
                          'O':['5a']},
-        side_atoms_list={'H':['1a','3a','4a','4b','5b']},
+        leaf_atoms_dict={'H':['1a','3a','4a','4b','5b']},
         additional_or_special_bonds_list=[['1a','2a','pi'],
                                           ['2a','3a','pi'],
                                           ['3a','4b','pi'],
@@ -286,10 +286,10 @@ Ph - C = O
 m17 = Molecule(
         name = 'Benzoic acid',
         name_Chinese='苯甲酸',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'C':['2a'],
                          'O':['3a','3b']},
-        side_atoms_list={'H':['3b']},
+        leaf_atoms_dict={'H':['3b']},
         additional_or_special_bonds_list=[['2a','3a','double']])
 y17 = 92
 '''
@@ -301,10 +301,10 @@ CH3 - S - CH3
 m18 = Molecule(
         name = 'Dimethyl sulfoxide',
         name_Chinese='二甲基亚砜',
-        bone_atoms_list={'C':['1a','3a'],
+        bone_atoms_dict={'C':['1a','3a'],
                          'S':['2a'],
                          'O':['3b']},
-        side_atoms_list={'H':['1a3','3a3']},
+        leaf_atoms_dict={'H':['1a3','3a3']},
         additional_or_special_bonds_list=[['2a','3b','double']])
 y18 = 40
 '''
@@ -314,10 +314,10 @@ Ph-CH2-OH
 m19 = Molecule(
         name = 'Benzyl alcohol',
         name_Chinese='苯甲醇',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'C':['2a'],
                          'O':['3a']},
-        side_atoms_list={'H':['2a2','3a']})
+        leaf_atoms_dict={'H':['2a2','3a']})
 y19 = 30
 '''
 20. 苯甲醛 Benzaldehyde
@@ -326,10 +326,10 @@ Ph-CH=O
 m20 = Molecule(
         name = 'Benzaldehyde',
         name_Chinese='苯甲醛',
-        bone_atoms_list={'Ph':['1a'],
+        bone_atoms_dict={'Ph':['1a'],
                          'C':['2a'],
                          'O':['3a']},
-        side_atoms_list={'H':['2a']},
+        leaf_atoms_dict={'H':['2a']},
         additional_or_special_bonds_list=[['2a','3a','double']])
 y20 = 98
 

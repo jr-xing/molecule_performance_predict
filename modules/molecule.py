@@ -9,10 +9,13 @@ Created on Wed Aug 29 18:53:34 2018
 """
 import re
 import networkx as nx
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 class Molecule(nx.Graph):
     def __init__(self, name = 'unamed_molecule',
                  name_Chinese = '未命名分子',
-                 bone_atoms_list = None, side_atoms_list = None,
+                 bone_atoms_dict = None, leaf_atoms_dict = None,
                  default_bond_type = 'single', 
                  additional_or_special_bonds_list = None,
                  bond_type_to_weight_dict = {'single':1, 'double': 5, 'pi': 10},
@@ -25,10 +28,10 @@ class Molecule(nx.Graph):
             name_Chinese:
                 Chinsese name of molecule
                 分子中文名
-            bone_atoms_list:
+            bone_atoms_dict:
                 Atoms on main chains, should be dict of atom:[locations]: {'C':['1a','2a'}
                 主链原子，格式应为 atom:[locations] 形式的字典，例如： {'C':['1a','2a'}
-            side_atoms_list:
+            leaf_atoms_list:
                 "Side" atoms
                 
         """
@@ -39,10 +42,10 @@ class Molecule(nx.Graph):
         self.atom_type_to_label_dict = atom_type_to_label_dict
         self.bond_type_to_weight_dict = bond_type_to_weight_dict
         
-        if bone_atoms_list != None:
-            self.add_bone_atoms(bone_atoms_list)
-        if side_atoms_list != None:
-            self.add_side_atoms(side_atoms_list)
+        if bone_atoms_dict != None:
+            self.add_bone_atoms(bone_atoms_dict)
+        if leaf_atoms_dict != None:
+            self.add_leaf_atoms(leaf_atoms_dict)
         if additional_or_special_bonds_list != None:
             self.add_bonds(additional_or_special_bonds_list)
                     
@@ -63,7 +66,7 @@ class Molecule(nx.Graph):
                 # Add this atom to molecule
                 loc_index = int(re.findall('\d',atom_location)[0])      # '5' in '5b'                
                 chain_index = re.findall('[a-z]',atom_location)[0]      # 'b' in '5b'
-                self.add_node(atom_location, atom = atom, atom_label = self.atom_type_to_label_dict[atom], side_atom_num = 0)# ('5b','C',1)
+                self.add_node(atom_location, atom = atom, atom_label = self.atom_type_to_label_dict[atom], leaf_atom_num = 0)# ('5b','C',1)
                 
                 # Add bonds in same branch/chain
                 prev_loc_index = loc_index - 1                  # 5 - 1 = 4
@@ -89,7 +92,7 @@ class Molecule(nx.Graph):
                     
                 
             
-    def add_side_atoms(self, atoms_dict):
+    def add_leaf_atoms(self, atoms_dict):
         """Add side atoms
         Args:
             atoms_dict: {'H':['1a3',['2a2','single'],'3a2','4a','5a2','6a3','6b3']
@@ -114,10 +117,10 @@ class Molecule(nx.Graph):
                 # Add atom and bond to molecule
                 atom_location = loc_index + chain_index
                 for atom_idx in range(number):
-                    side_atom_location = atom_location + '+'*(self.nodes[atom_location]['side_atom_num']+1)
-                    self.add_node(side_atom_location, atom = atom, atom_label = self.atom_type_to_label_dict[atom])
-                    self.nodes[atom_location]['side_atom_num'] += 1
-                    self.add_bonds([[atom_location, side_atom_location]])
+                    leaf_atom_location = atom_location + '+'*(self.nodes[atom_location]['leaf_atom_num']+1)
+                    self.add_node(leaf_atom_location, atom = atom, atom_label = self.atom_type_to_label_dict[atom])
+                    self.nodes[atom_location]['leaf_atom_num'] += 1
+                    self.add_bonds([[atom_location, leaf_atom_location]])
                     
                     
                 # [loc_index, number] = [int(item) for item in atom_location.split(chain_index)]    
@@ -136,22 +139,12 @@ class Molecule(nx.Graph):
                 bond_type = self.default_bond_type
             else:
                 bond_type = bond_locs_type[2]
-            self.add_edge(bond_locs_type[0], bond_locs_type[1], bond_type = bond_type, bond_weight = self.bond_type_to_weight_dict[bond_type])
-    
-    def set_bonds(self,bonds_loc_list, bonds_type_list = None, default_bond_type = 'single'):
-        if bonds_type_list == None:
-            bonds_type_list = [default_bond_type] * len(bonds_loc_list)
-        
-        for bond_idx, bond_locs in enumerate(bonds_loc_list):
-            self.add_edge(bond_locs[0], bond_locs[1], bond_type = bonds_type_list[bond_idx], 
-                          bond_weight = self.bond_type_to_weight_dict[bonds_type_list[bond_idx]])
-#            if self.has_node(bond_locs[0]) & self.has_node(bond_locs[0]):
-#                self.add_edge(bond_locs[0], bond_locs[1], bond_type = bonds_type_list[bond_idx], bond_weight = self.bond_type_to_weight_dict[bonds_type_list[bond_idx]])
-#            else:
-#                print('At least one of atom at {} and {} does not exist!'.format(bond_locs[0], bond_locs[1]))
+            self.add_edge(bond_locs_type[0], bond_locs_type[1], bond_type = bond_type, bond_weight = self.bond_type_to_weight_dict[bond_type])    
         
     def expandPh(self):
-        # expand Ph to C-cycle, new atom will be placed on new chains, of which chain index 'z','y',...        
+        """ 
+        Expand Ph to C-cycle, new atom will be placed on new chains, of which chain index 'z','y',...        
+        """
         import copy
         moleclue_expandPh = copy.deepcopy(self)
         init_chain_idx = 'z'
@@ -169,7 +162,7 @@ class Molecule(nx.Graph):
                 for c_idx in range(6):
                     # Adding Atoms
                     moleclue_expandPh.add_node(atoms_locs[c_idx], atom = 'C', 
-                                               atom_label = self.atom_type_to_label_dict['C'], side_atom_num = 0)
+                                               atom_label = self.atom_type_to_label_dict['C'], leaf_atom_num = 0)
                 for c_idx in range(6):
                     # Adding bonds
                     moleclue_expandPh.add_bonds([[atoms_locs[c_idx], atoms_locs[(c_idx+1)%6],'pi']])
@@ -178,7 +171,7 @@ class Molecule(nx.Graph):
                     # Re-link Ph's neighbors
                     moleclue_expandPh.add_bonds([[atoms_locs[0], Ph_neighbors_locs[0], 'single']])
                     # Add H atoms
-                    moleclue_expandPh.add_side_atoms({'H':atoms_locs[1:]})
+                    moleclue_expandPh.add_leaf_atoms({'H':atoms_locs[1:]})
                 else:
                     print('don\'t support multineighbors!')    
                 
@@ -187,7 +180,8 @@ class Molecule(nx.Graph):
             return self
     
     def ignoreH(self):
-        # remove all H from molecule
+        """ Remove all H from molecule
+        """
         import copy
         Hs_list = [node for node in self.nodes if self.nodes[node]['atom']=='H']
         moleclue_ignoreH = copy.deepcopy(self)
@@ -210,9 +204,36 @@ class Molecule(nx.Graph):
             atom2_loc = bond[1]; atom2 = self.nodes[atom2_loc]['atom']
             bond_type = bond[2]['bond_type']; bond_str = bond_type_str_dict[bond_type]
             
-            # 1a-C -- 2a-C | single            
-            print('{}-{} {} {}-{}'.format(atom1_loc, atom1, bond_str, atom2, atom2_loc))
+            # 1a-C -- 2a-C | single
+            # print('{}-{} {} {}-{}'.format(atom1_loc, atom1, bond_str, atom2, atom2_loc))
+            
+            # (1a) C-C (2a)
+            print('({}) {} {} {} ({})'.format(atom1_loc, atom1, bond_str, atom2, atom2_loc))
+            
+    def visualize(self):
+        '''
+        https://python-graph-gallery.com/325-map-colour-to-the-edges-of-a-network/
+        https://python-graph-gallery.com/324-map-a-color-to-network-nodes/
+        '''
+#        bond_type_color_dict = {'single':'-',
+#                              'double': '=',
+#                              'pi': '~'}
+        start_atoms = []
+        end_atoms = []
+        edge_weights = []        
+        for bond in self.edges.data():
+            atom1_loc = bond[0]; atom1 = self.nodes[atom1_loc]['atom']; 
+            start_atoms.append(atom1+'-'+atom1_loc)
+            atom2_loc = bond[1]; atom2 = self.nodes[atom2_loc]['atom']; 
+            end_atoms.append(atom2+'-'+atom2_loc)
+            bond_weight = bond[2]['bond_weight'];   edge_weights.append(bond_weight)
+            
+            #bond_type = bond[2]['bond_type'];   edge_weights.append(bond_type)
+        # Dataframe with connections
+        df = pd.DataFrame({ 'from':start_atoms, 'to':end_atoms, 'value':edge_weights})        
+        G=nx.from_pandas_edgelist(df, 'from', 'to', create_using=nx.Graph() )
         
+        nx.draw(G, with_labels=True, node_color='skyblue', node_size=1500, edge_color=df['value'], width=10.0, edge_cmap=plt.cm.Blues)         
         
     def to_GraKel_graph(self):
         # H2O = scipy.sparse.csr_matrix(([1, 1, 1, 1], ([0, 0, 1, 2], [1, 2, 0, 0])), shape=(3, 3))

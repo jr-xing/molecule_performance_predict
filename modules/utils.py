@@ -34,11 +34,12 @@ def toGraKelList(molecule_list, ignoreH = False, expandPh = False):
 
 def print_name_pred_real_dif(names, pred, real):
     dif = pred-real    
+    print('名称\t\t预测值\t\t真实值\t差')
     for idx in range(len(names)):
         if len(names[idx]) >6:
-            print(names[idx]+'\t'+str(pred[idx])+'\t\t'+str(real[idx])+'\t'+str(dif[idx]))
+            print(names[idx]+'\t'+str('%.4f'%pred[idx])+'\t\t'+str(real[idx])+'\t'+str('%.4f'%dif[idx]))
         else:    
-            print(names[idx]+'\t\t'+str(pred[idx])+'\t\t'+str(real[idx])+'\t'+str(dif[idx]))
+            print(names[idx]+'\t\t'+str('%.4f'%pred[idx])+'\t\t'+str(real[idx])+'\t'+str('%.4f'%dif[idx]))
 
 def testKernel(mx_train, my_train,mx_test, my_test,
                kernel = GraphKernel(kernel = [{"name": "weisfeiler_lehman", "niter": 10}, {"name": "subtree_wl"}], normalize=False)):
